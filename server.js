@@ -17,9 +17,9 @@ console.error = (
 // Capture stack traces for errors
 process.on("uncaughtException", (err) => {
   console.error("Ther is an error");
-  console.error(` The 404 Back ---> Uncaught Exception: ${err.message}`);
+  // console.error(` The 404 Back ---> Uncaught Exception: ${err.message}`);
   // console.error(`[${APP_NAME}] Uncaught Exception: ${err.message}`);
-  console.error(`The 404 Back --->  Stack Trace:\n${err.stack}`);
+  // console.error(`The 404 Back --->  Stack Trace:\n${err.stack}`);
   // console.error(`[${APP_NAME}] Stack Trace:\n${err.stack}`);
   process.exit(1); // Exit the process to avoid undefined behavior
 });
