@@ -15,24 +15,24 @@ console.error = (
 )(console.error);
 
 // Capture stack traces for errors
-// process.on("uncaughtException", (err) => {
-//   console.error("Ther is an error");
-//   // console.error(` The 404 Back ---> Uncaught Exception: ${err.message}`);
-//   // console.error(`[${APP_NAME}] Uncaught Exception: ${err.message}`);
-//   // console.error(`The 404 Back --->  Stack Trace:\n${err.stack}`);
-//   // console.error(`[${APP_NAME}] Stack Trace:\n${err.stack}`);
-//   process.exit(1); // Exit the process to avoid undefined behavior
-// });
+process.on("uncaughtException", (err) => {
+  console.error("Ther is an error");
+  // console.error(` The 404 Back ---> Uncaught Exception: ${err.message}`);
+  console.error(`[${APP_NAME}] Uncaught Exception: ${err.message}`);
+  // console.error(`The 404 Back --->  Stack Trace:\n${err.stack}`);
+  console.error(`[${APP_NAME}] Stack Trace:\n${err.stack}`);
+  process.exit(1); // Exit the process to avoid undefined behavior
+});
 
-// process.on("unhandledRejection", (reason, promise) => {
-//   console.error(`[${APP_NAME}] Unhandled Rejection at:`, promise);
-//   if (reason instanceof Error) {
-//     console.error(`[${APP_NAME}] Reason: ${reason.message}`);
-//     console.error(`[${APP_NAME}] Stack Trace:\n${reason.stack}`);
-//   } else {
-//     console.error(`[${APP_NAME}] Reason:`, reason);
-//   }
-// });
+process.on("unhandledRejection", (reason, promise) => {
+  console.error(`[${APP_NAME}] Unhandled Rejection at:`, promise);
+  if (reason instanceof Error) {
+    console.error(`[${APP_NAME}] Reason: ${reason.message}`);
+    console.error(`[${APP_NAME}] Stack Trace:\n${reason.stack}`);
+  } else {
+    console.error(`[${APP_NAME}] Reason:`, reason);
+  }
+});
 
 // Start the server
 app.listen(PORT, "0.0.0.0", () => {
