@@ -1,5 +1,17 @@
 const os = require("os");
 
+function checkBody(body, keys) {
+  let isValid = true;
+
+  for (const field of keys) {
+    if (!body[field] || body[field] === "") {
+      isValid = false;
+    }
+  }
+
+  return isValid;
+}
+
 // Function to get the local IP address
 function getLocalIpAddress() {
   const interfaces = os.networkInterfaces();
@@ -14,5 +26,6 @@ function getLocalIpAddress() {
 }
 
 module.exports = {
+  checkBody,
   getLocalIpAddress,
 };

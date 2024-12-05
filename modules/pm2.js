@@ -39,6 +39,7 @@ async function createPm2AppList() {
         machineName: machineName,
         status: app.pm2_env.status,
         nodeEnv: app.pm2_env?.NODE_ENV,
+        lastUpdatedRecord: new Date(),
       }));
 
       resolve(appList);
