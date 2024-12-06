@@ -1,13 +1,12 @@
 var express = require("express");
 var router = express.Router();
-
 const fs = require("fs");
 
-// const { authenticateToken } = require("../modules/token");
+const { authenticateToken } = require("../modules/userAuthentication");
 
 // Route to read and return the syslog file
 // router.get("/combined", authenticateToken, async (req, res) => {
-router.get("/combined", async (req, res) => {
+router.get("/combined", authenticateToken, async (req, res) => {
   console.log("- in GET /logs/combined");
   const syslogPath = process.env.FILE_PATH_SYSLOG;
   const pm2CombinedOutput = process.env.FILE_PATH_PM2_OUTPUT;

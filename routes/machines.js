@@ -3,17 +3,18 @@ var router = express.Router();
 const os = require("os");
 const Machine = require("../models/machine");
 const { checkBody } = require("../modules/common");
-const { stop } = require("pm2");
+
+const { authenticateToken } = require("../modules/userAuthentication");
 
 /* GET home page. */
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
   console.log("in GET /machines");
 
   const existingMachines = await Machine.find();
   return res.json({ result: true, existingMachines });
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authenticateToken, async (req, res) => {
   console.log("in POST /machines");
   console.log("checking ------");
   if (!checkBody(req.body, ["urlFor404Api"])) {
@@ -69,7 +70,7 @@ router.post("/", async (req, res) => {
   return res.json({ result: true, url: newMachineUrl, machineName });
 });
 
-router.delete("/", async (req, res) => {
+router.delete("/", authenticateToken, async (req, res) => {
   console.log("in DELETE /machines");
   const bodyFields = ["urlFor404Api", "machineName"];
   if (!checkBody(req.body, bodyFields)) {

@@ -5,31 +5,32 @@ const {
   appendNginxSitesAvailableCollection,
 } = require("../modules/nginxSitesAvailable");
 const { appendPm2Collection } = require("../modules/pm2");
+const { authenticateToken } = require("../modules/userAuthentication");
 
 //Models
 const Pm2ManagedApp = require("../models/pm2ManagedApp");
 const NginxConfdFile = require("../models/nginxConfdFile");
 const mongoose = require("mongoose");
 
-router.get("/confd", async (req, res) => {
+router.get("/confd", authenticateToken, async (req, res) => {
   const fileList = await appendNginxConfdCollection();
   return res.json({ fileList });
 });
 
-router.get("/sites-available", async (req, res) => {
+router.get("/sites-available", authenticateToken, async (req, res) => {
   const fileList = await appendNginxSitesAvailableCollection();
 
   res.json({ result: true, fileList });
 });
 
-router.get("/pm2", async (req, res) => {
+router.get("/pm2", authenticateToken, async (req, res) => {
   console.log("- in GET /pm2");
   const appList = await appendPm2Collection();
 
   return res.json({ result: true, appList });
 });
 
-router.get("/list/:outer", async (req, res) => {
+router.get("/list/:outer", authenticateToken, async (req, res) => {
   console.log("in GET /list/:outer");
 
   let outerList = [];
@@ -63,7 +64,7 @@ router.get("/list/:outer", async (req, res) => {
 });
 
 // OBE - Delete
-router.get("/list-pm2-apps", async (req, res) => {
+router.get("/list-pm2-apps", authenticateToken, async (req, res) => {
   console.log("in GET /list-pm2-apps");
 
   appList = await Pm2ManagedApp.find();
