@@ -54,6 +54,28 @@ async function appendPm2Collection() {
 
   const appList = await createPm2AppList();
 
+  // filter all Pm2ManagedApp with the local IP address
+  console.log(appList);
+  const localIpAddress = getLocalIpAddress();
+
+  // Step 2: filter candidates for deletion
+  const filteredLocalPm2ManagedApp = await Pm2ManagedApp.find({
+    localIpOfMachine: localIpAddress,
+  });
+
+  // Step 3: Collect all app names from appList for quick lookup
+  const appNamesSet = new Set(appList.map((app) => app.nameOfApp));
+
+  // Step 4: Delete Pm2ManagedApp documents that are not in appList
+  const deletionPromises = filteredLocalPm2ManagedApp
+    .filter((doc) => !appNamesSet.has(doc.nameOfApp)) // Filter out apps not in appList
+    .map((doc) => {
+      console.log(`Deleting: ${doc.nameOfApp}`);
+      return Pm2ManagedApp.deleteOne({ _id: doc._id }); // Delete by _id for safety
+    });
+
+  await Promise.all(deletionPromises);
+
   appList.map(async (elem) => {
     const { port, localIpOfMachine, projectWorkingDirectory, ...rest } = elem;
     await Pm2ManagedApp.updateOne(
