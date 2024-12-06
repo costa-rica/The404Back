@@ -80,12 +80,12 @@ async function appendNginxConfdCollection() {
     localIpOfMachine: localIpAddress,
   });
 
-  // Step 3: Collect all app names from appList for quick lookup
+  // Step 3: Collect all app names from fileListConfd for quick lookup
   const filenamesSet = new Set(fileListConfd.map((app) => app.filename));
 
-  // Step 4: Delete Pm2ManagedApp documents that are not in appList
+  // Step 4: Delete ConfD documents that are not in fileListConfd
   const deletionPromises = filteredLocalFileListConfd
-    .filter((doc) => !filenamesSet.has(doc.filename)) // Filter out apps not in appList
+    .filter((doc) => !filenamesSet.has(doc.filename)) // Filter out apps not in fileListConfd
     .map((doc) => {
       console.log(`Deleting: ${doc.filename}`);
       return NginxConfdFile.deleteOne({ _id: doc._id }); // Delete by _id for safety
