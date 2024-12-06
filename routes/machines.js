@@ -22,7 +22,18 @@ router.post("/", authenticateToken, async (req, res) => {
       .status(401)
       .json({ result: false, error: "Missing or empty fields" });
   }
-  const newMachineUrl = req.body.urlFor404Api;
+  let newMachineUrl = req.body.urlFor404Api;
+
+  // Ensure the string starts with "https://"
+  if (!newMachineUrl.startsWith("https://")) {
+    newMachineUrl = "https://" + newMachineUrl;
+  }
+
+  // Ensure the string does not end with a "/"
+  if (newMachineUrl.endsWith("/")) {
+    newMachineUrl = newMachineUrl.slice(0, -1);
+  }
+
   let machineName;
   try {
     const response = await fetch(`${newMachineUrl}/machineName`);
