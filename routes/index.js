@@ -12,9 +12,12 @@ router.get("/", function (req, res, next) {
 router.get("/machineName", async (req, res) => {
   const machineName = os.hostname();
   console.log(`machineNaem: ${machineName}`);
-  const thisMachine = await Machine.find({ machineName: machineName });
-  console.log("did we get this machine: ");
-  console.log(thisMachine);
+  const thisMachine = await Machine.findOne({ machineName: machineName });
+  if (!thisMachine) {
+    return res
+      .status(404)
+      .json({ result: false, message: "Machine not found" });
+  }
   const response = {
     machineName: thisMachine.machineName,
     urlFor404Api: thisMachine.urlFor404Api,
