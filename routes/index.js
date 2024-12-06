@@ -21,13 +21,14 @@ router.get("/machineName", async (req, res) => {
     item.filename.includes(".the404.")
   );
   // Get the value of the 'urls' property
-  const urlFor404Api = targetElement ? targetElement.urls[0] : null;
-  // const thisMachine = await Machine.findOne({ machineName: machineName });
-  // if (!thisMachine) {
-  //   return res
-  //     .status(404)
-  //     .json({ result: false, message: "Machine not found" });
-  // }
+  let urlFor404Api = targetElement ? targetElement.urls[0] : null;
+  console.log(`process.env.NODE_ENV: ${process.env.NODE_ENV}`);
+  // check NODE_ENV
+  urlFor404Api =
+    process.env.NODE_ENV == "production"
+      ? "https://" + urlFor404Api
+      : "http://" + urlFor404Api;
+
   const response = {
     machineName: machineName,
     urlFor404Api: urlFor404Api,
