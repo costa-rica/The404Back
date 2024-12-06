@@ -108,5 +108,6 @@ async function appendNginxConfdCollection() {
 }
 
 module.exports = {
+  createNginxConfdFilesList,
   appendNginxConfdCollection,
 };
