@@ -15,10 +15,13 @@ router.get("/machineName", async (req, res) => {
   const thisMachine = await Machine.find({ machineName: machineName });
   console.log("did we get this machine: ");
   console.log(thisMachine);
-  return res.json({
+  const response = {
     machineName: thisMachine.machineName,
     urlFor404Api: thisMachine.urlFor404Api,
-  });
+  };
+  console.log("response: ", response);
+  console.log(response);
+  return res.json(response);
 });
 
 module.exports = router;
