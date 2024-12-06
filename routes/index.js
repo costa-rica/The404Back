@@ -20,7 +20,8 @@ router.get("/machineName", async (req, res) => {
     urlFor404Api: thisMachine.urlFor404Api,
   };
   console.log("response: ", response);
-  console.log(response);
+  console.log(response.machineName);
+  console.log(response.urlFor404Api);
   return res.json(response);
 });
 
