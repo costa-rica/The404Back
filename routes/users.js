@@ -51,16 +51,11 @@ router.post("/login", async (req, res) => {
       .status(401)
       .json({ result: false, error: "Missing or empty fields" });
   }
-  console.log("body.email", req.body.email);
-  console.log("body.password", req.body.password);
+
   const email = req.body.email;
 
   try {
     const user = await findUserByEmail(email);
-    console.log("user.email: ", user.email);
-    console.log("user.password: ", user.password);
-
-    console.log(`user.id: ${user.id}`);
     // check password
     if (!bcrypt.compareSync(req.body.password, user.password)) {
       console.log("wrong password");

@@ -60,6 +60,8 @@ router.get("/list/:outer", authenticateToken, async (req, res) => {
     const appObj = { ...elem._doc, innerListObjects };
     appList.push(appObj);
   }
+
+  // Add sort by const machineName = os.hostname(); so that the response will send all this machien's to the top of list
   return res.json({ appList });
 });
 
