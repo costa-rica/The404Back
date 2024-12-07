@@ -25,7 +25,29 @@ function getLocalIpAddress() {
   return "127.0.0.1"; // Default to localhost if no address is found
 }
 
+function sortByMachineName(list, desiredMachineName) {
+  return list.sort((a, b) => {
+    // If `a` has the desired machineName, it goes before `b`
+    if (
+      a.machineName === desiredMachineName &&
+      b.machineName !== desiredMachineName
+    ) {
+      return -1;
+    }
+    // If `b` has the desired machineName, it goes before `a`
+    if (
+      b.machineName === desiredMachineName &&
+      a.machineName !== desiredMachineName
+    ) {
+      return 1;
+    }
+    // If neither or both have the desired machineName, maintain original order
+    return 0;
+  });
+}
+
 module.exports = {
   checkBody,
   getLocalIpAddress,
+  sortByMachineName,
 };

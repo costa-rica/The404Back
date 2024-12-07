@@ -6,11 +6,12 @@ const {
 } = require("../modules/nginxSitesAvailable");
 const { appendPm2Collection, togglePm2App } = require("../modules/pm2");
 const { authenticateToken } = require("../modules/userAuthentication");
+const os = require("os");
+const { sortByMachineName } = require("../modules/common");
 
 //Models
 const Pm2ManagedApp = require("../models/pm2ManagedApp");
 const NginxConfdFile = require("../models/nginxConfdFile");
-const os = require("os");
 
 router.get("/confd", authenticateToken, async (req, res) => {
   const fileList = await appendNginxConfdCollection();
@@ -62,6 +63,7 @@ router.get("/list/:outer", authenticateToken, async (req, res) => {
   }
 
   // Add sort by const machineName = os.hostname(); so that the response will send all this machien's to the top of list
+  appList = sortByMachineName(appList, os.hostname());
   return res.json({ appList });
 });
 
