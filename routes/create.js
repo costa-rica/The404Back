@@ -7,6 +7,7 @@ router.post("/server-file", (req, res) => {
   console.log("in POST /create-server-file");
 
   const { nginxDir, framework, port, serverNames } = req.body;
+
   const createFileObj = createConfdFile(req.body);
 
   if (!createFileObj.result) {
