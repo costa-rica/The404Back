@@ -63,7 +63,7 @@ router.get("/list/:outer", authenticateToken, async (req, res) => {
   return res.json({ appList });
 });
 
-router.post("/toggle-app", async (req, res) => {
+router.post("/toggle-app", authenticateToken, async (req, res) => {
   console.log(`- in POST /toggle-app`);
   const { appName } = req.body;
   console.log(`appName: ${appName}`);
