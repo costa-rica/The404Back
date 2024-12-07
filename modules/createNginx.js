@@ -4,6 +4,11 @@ const path = require("path");
 function createConfdFile(createObj) {
   const { framework, nginxDir, port, serverNames } = createObj;
 
+  let appCwd; // appCwd is the app current working dir (i.e. usually /home/user/app/appName)
+  if (framework !== "expressJs") {
+    appCwd = createObj.appCwd;
+  }
+
   const serverNameList = serverNames.split(",").map((name) => name.trim());
   const primaryServerName = serverNameList[0]; // Use the first server name for the file name
   const serverNamesString = serverNameList.join(" "); // Join all server names with spaces
@@ -46,10 +51,18 @@ function createConfdFile(createObj) {
   try {
     // Read the file contents synchronously
     templateFileContents = fs.readFileSync(filePath, "utf8");
-    // replace the strings with
-    newFileContent = templateFileContents
-      .replace("<ReplaceMe: server name>", serverNamesString)
-      .replace("<ReplaceMe: port number>", port);
+
+    if (framework === "expressJs") {
+      // replace the strings with
+      newFileContent = templateFileContents
+        .replace("<ReplaceMe: server name>", serverNamesString) // only once
+        .replace("<ReplaceMe: port number>", port); // only once
+    } else {
+      newFileContent = templateFileContents
+        .replace("<ReplaceMe: server name>", serverNamesString) // only once
+        .replace(/<ReplaceMe: app cwd>/g, appCwd) // every instance
+        .replace("<ReplaceMe: port number>", port); // only once
+    }
 
     // Write the new configuration to a file synchronously
     fs.writeFileSync(outputFilePath, newFileContent);
