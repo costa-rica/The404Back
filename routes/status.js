@@ -10,7 +10,7 @@ const { authenticateToken } = require("../modules/userAuthentication");
 //Models
 const Pm2ManagedApp = require("../models/pm2ManagedApp");
 const NginxConfdFile = require("../models/nginxConfdFile");
-const pm2 = require("pm2");
+const os = require("os");
 
 router.get("/confd", authenticateToken, async (req, res) => {
   const fileList = await appendNginxConfdCollection();
@@ -73,9 +73,10 @@ router.post("/toggle-app", authenticateToken, async (req, res) => {
   try {
     const status = await togglePm2App(appName);
     const machineName = os.hostname();
+    console.log("got status");
     // Update the document
     const result = await Pm2ManagedApp.findOneAndUpdate(
-      { nameOfApp, machineName }, // Query filter
+      { nameOfApp: appName, machineName }, // Query filter
       { $set: { status: status } }, // Update
       { new: true } // Options: return the updated document
     );
