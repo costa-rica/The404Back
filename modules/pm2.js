@@ -87,4 +87,70 @@ async function appendPm2Collection() {
   return appList;
 }
 
-module.exports = { appendPm2Collection };
+async function togglePm2App(appName) {
+  let status = "error";
+
+  try {
+    // Connect to PM2
+    await new Promise((resolve, reject) => {
+      pm2.connect((err) => {
+        if (err) {
+          return reject(new Error("Failed to connect to PM2"));
+        }
+        console.log("---> pm2.connect() no error 👍");
+        resolve();
+      });
+    });
+
+    // Describe and toggle app
+    status = await new Promise((resolve, reject) => {
+      pm2.describe(appName, (err, processDescription) => {
+        if (err || !processDescription || processDescription.length === 0) {
+          return reject(new Error(`App "${appName}" not found in PM2`));
+        }
+
+        const appStatus = processDescription[0].pm2_env.status;
+        console.log(`App "${appName}" current status: ${appStatus}`);
+
+        // If it is part of the The404 suite, just restart, no deactivate.
+        if (appName.includes("The404")) {
+          pm2.restart(appName, (err) => {
+            if (err) {
+              return reject(new Error(`Failed to restart app "${appName}"`));
+            }
+            console.log(`App "${appName}" restarted successfully.`);
+            pm2.disconnect(); // Cleanup
+            resolve("restarted");
+          });
+        } else if (appStatus === "online") {
+          pm2.stop(appName, (err) => {
+            if (err) {
+              return reject(new Error(`Failed to stop app "${appName}"`));
+            }
+            console.log(`App "${appName}" stopped successfully.`);
+            pm2.disconnect(); // Cleanup
+            resolve("inactive");
+          });
+        } else {
+          pm2.start(appName, (err) => {
+            if (err) {
+              return reject(new Error(`Failed to start app "${appName}"`));
+            }
+            console.log(`App "${appName}" started successfully.`);
+            pm2.disconnect(); // Cleanup
+            resolve("active");
+          });
+        }
+      });
+    });
+
+    console.log(`togglePm2App finished successfully with status: ${status}`);
+    return status;
+  } catch (error) {
+    console.error("Error in /modules/pm2.js > togglePm2App():", error);
+    pm2.disconnect(); // Cleanup in case of error
+    throw error; // Propagate error to the route
+  }
+}
+
+module.exports = { appendPm2Collection, togglePm2App };

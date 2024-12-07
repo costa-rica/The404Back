@@ -4,13 +4,13 @@ const { appendNginxConfdCollection } = require("../modules/nginxConfd");
 const {
   appendNginxSitesAvailableCollection,
 } = require("../modules/nginxSitesAvailable");
-const { appendPm2Collection } = require("../modules/pm2");
+const { appendPm2Collection, togglePm2App } = require("../modules/pm2");
 const { authenticateToken } = require("../modules/userAuthentication");
 
 //Models
 const Pm2ManagedApp = require("../models/pm2ManagedApp");
 const NginxConfdFile = require("../models/nginxConfdFile");
-const mongoose = require("mongoose");
+const pm2 = require("pm2");
 
 router.get("/confd", authenticateToken, async (req, res) => {
   const fileList = await appendNginxConfdCollection();
@@ -61,6 +61,22 @@ router.get("/list/:outer", authenticateToken, async (req, res) => {
     appList.push(appObj);
   }
   return res.json({ appList });
+});
+
+router.post("/toggle-app", async (req, res) => {
+  console.log(`- in POST /toggle-app`);
+  const { appName } = req.body;
+  console.log(`appName: ${appName}`);
+
+  try {
+    const status = await togglePm2App(appName);
+    res
+      .status(200)
+      .json({ status, message: `App "${appName}" is now ${status}` });
+  } catch (error) {
+    console.error("Route error:", error.message);
+    res.status(500).json({ status: "error", message: error.message });
+  }
 });
 
 // OBE - Delete
