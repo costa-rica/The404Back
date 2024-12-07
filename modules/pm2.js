@@ -95,6 +95,7 @@ async function togglePm2App(appName) {
     await new Promise((resolve, reject) => {
       pm2.connect((err) => {
         if (err) {
+          console.error("--->pm2 connect failed");
           return reject(new Error("Failed to connect to PM2"));
         }
         console.log("---> pm2.connect() no error 👍");
@@ -106,6 +107,7 @@ async function togglePm2App(appName) {
     status = await new Promise((resolve, reject) => {
       pm2.describe(appName, (err, processDescription) => {
         if (err || !processDescription || processDescription.length === 0) {
+          console.error("---> App  not found");
           return reject(new Error(`App "${appName}" not found in PM2`));
         }
 
@@ -116,6 +118,7 @@ async function togglePm2App(appName) {
         if (appName.includes("The404")) {
           pm2.restart(appName, (err) => {
             if (err) {
+              console.error("---> App  -Failed to restart app");
               return reject(new Error(`Failed to restart app "${appName}"`));
             }
             console.log(`App "${appName}" restarted successfully.`);
@@ -125,6 +128,7 @@ async function togglePm2App(appName) {
         } else if (appStatus === "online") {
           pm2.stop(appName, (err) => {
             if (err) {
+              console.error("---> App -Failed to stop app");
               return reject(new Error(`Failed to stop app "${appName}"`));
             }
             console.log(`App "${appName}" stopped successfully.`);
@@ -134,6 +138,7 @@ async function togglePm2App(appName) {
         } else {
           pm2.start(appName, (err) => {
             if (err) {
+              console.error("---> App -Failed to start app");
               return reject(new Error(`Failed to start app "${appName}"`));
             }
             console.log(`App "${appName}" started successfully.`);

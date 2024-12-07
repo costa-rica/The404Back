@@ -72,6 +72,16 @@ router.post("/toggle-app", authenticateToken, async (req, res) => {
 
   try {
     const status = await togglePm2App(appName);
+    const machineName = os.hostname();
+    // Update the document
+    const result = await Pm2ManagedApp.findOneAndUpdate(
+      { nameOfApp, machineName }, // Query filter
+      { $set: { status: status } }, // Update
+      { new: true } // Options: return the updated document
+    );
+    console.log("updated app document: ");
+    console.log(result);
+
     res
       .status(200)
       .json({ status, message: `App "${appName}" is now ${status}` });
