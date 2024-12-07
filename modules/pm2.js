@@ -129,7 +129,7 @@ async function togglePm2App(appName) {
             }
             console.log(`App "${appName}" stopped successfully.`);
             pm2.disconnect(); // Cleanup
-            resolve("inactive");
+            resolve("offline");
           });
         } else {
           pm2.start(appName, (err) => {
@@ -138,7 +138,7 @@ async function togglePm2App(appName) {
             }
             console.log(`App "${appName}" started successfully.`);
             pm2.disconnect(); // Cleanup
-            resolve("active");
+            resolve("online");
           });
         }
       });
