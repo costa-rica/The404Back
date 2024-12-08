@@ -18,7 +18,7 @@ router.get("/machineName", async (req, res) => {
 
   // Find the element where filename contains ".the404."
   const targetElement = confdFileList.find((item) =>
-    item.filename.includes(".the404.")
+    item.filename.includes(".the404api.")
   );
   // Get the value of the 'urls' property
   let urlFor404Api = targetElement ? targetElement.urls[0] : null;
