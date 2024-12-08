@@ -34,11 +34,13 @@ function createServerFile(createObj) {
 
   // Check if the directory exists
   if (!fs.existsSync(projectResourcesPath)) {
+    console.log("projectResourcesPath does NOT exists");
     return {
       result: false,
       message: "Missing project_resources/createTemplateFiles directory",
     };
   }
+  console.log("projectResourcesPath EXISTS");
   const filePath = path.join(projectResourcesPath, templateFilename);
   let templateFileContents;
   let newFileContent;
@@ -53,6 +55,7 @@ function createServerFile(createObj) {
   let outputFilePath = path.join(createNginxFilesDir, `${primaryServerName}`);
 
   try {
+    console.log("--> trying to read the nginx templateFile");
     // Read the file contents synchronously
     templateFileContents = fs.readFileSync(filePath, "utf8");
 
