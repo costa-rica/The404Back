@@ -52,44 +52,44 @@ function createServerFile(createObj) {
 
   let outputFilePath = path.join(createNginxFilesDir, `${primaryServerName}`);
 
-  try {
-    // Read the file contents synchronously
-    templateFileContents = fs.readFileSync(filePath, "utf8");
+  // try {
+  // Read the file contents synchronously
+  templateFileContents = fs.readFileSync(filePath, "utf8");
 
-    if (templateFilename === "expressJsConfd.txt") {
-      outputFilePath = outputFilePath + ".conf";
-      // replace the strings with
-      newFileContent = templateFileContents
-        .replace("<ReplaceMe: server name>", serverNamesString) // only once
-        .replace("<ReplaceMe: port number>", createObj.port); // only once
-    } else if (
-      templateFilename === "nextJsConfd.txt" ||
-      templateFilename === "pythonFlaskConfd.txt"
-    ) {
-      outputFilePath = outputFilePath + ".conf";
-      newFileContent = templateFileContents
-        .replace("<ReplaceMe: server name>", serverNamesString) // only once
-        .replace(/<ReplaceMe: app cwd>/g, createObj.appCwd) // every instance
-        .replace("<ReplaceMe: port number>", createObj.port); // only once
-    } else {
-      newFileContent = templateFileContents
-        .replace("<ReplaceMe: server name>", serverNamesString) // only once
-        .replace(/<ReplaceMe: local ip>/g, createObj.localIp) // every instance
-        .replace(/<ReplaceMe: port number>/g, createObj.port); // every instance
-    }
-
-    // Write the new configuration to a file synchronously
-    fs.writeFileSync(outputFilePath, newFileContent);
-    console.log("Finished writing file ----");
-  } catch (error) {
-    console.error(`Error during file operation: ${error.message}`);
-
-    return {
-      result: false,
-      message: "Error processing the file",
-      error: error.message,
-    };
+  if (templateFilename === "expressJsConfd.txt") {
+    outputFilePath = outputFilePath + ".conf";
+    // replace the strings with
+    newFileContent = templateFileContents
+      .replace("<ReplaceMe: server name>", serverNamesString) // only once
+      .replace("<ReplaceMe: port number>", createObj.port); // only once
+  } else if (
+    templateFilename === "nextJsConfd.txt" ||
+    templateFilename === "pythonFlaskConfd.txt"
+  ) {
+    outputFilePath = outputFilePath + ".conf";
+    newFileContent = templateFileContents
+      .replace("<ReplaceMe: server name>", serverNamesString) // only once
+      .replace(/<ReplaceMe: app cwd>/g, createObj.appCwd) // every instance
+      .replace("<ReplaceMe: port number>", createObj.port); // only once
+  } else {
+    newFileContent = templateFileContents
+      .replace("<ReplaceMe: server name>", serverNamesString) // only once
+      .replace(/<ReplaceMe: local ip>/g, createObj.localIp) // every instance
+      .replace(/<ReplaceMe: port number>/g, createObj.port); // every instance
   }
+
+  // Write the new configuration to a file synchronously
+  fs.writeFileSync(outputFilePath, newFileContent);
+  console.log("Finished writing file ----");
+  // } catch (error) {
+  //   console.error(`Error during file operation: ${error.message}`);
+
+  //   return {
+  //     result: false,
+  //     message: "Error processing the file",
+  //     error: error.message,
+  //   };
+  // }
 
   return {
     result: true,
