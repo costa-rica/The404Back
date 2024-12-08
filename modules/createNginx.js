@@ -86,7 +86,8 @@ function createServerFile(createObj) {
     console.log("There might not be any nginx Template files <----");
     return {
       result: false,
-      message: "Error processing the file",
+      message:
+        "Error processing the file -> there might not be any template files on the server ? check!",
       error: error.message,
     };
   }
