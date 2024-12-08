@@ -12,6 +12,20 @@ function checkBody(body, keys) {
   return isValid;
 }
 
+function checkBodyReturnMissing(body, keys) {
+  let isValid = true;
+  let missingKeys = [];
+
+  for (const field of keys) {
+    if (!body[field] || body[field] === "") {
+      isValid = false;
+      missingKeys.push(field);
+    }
+  }
+
+  return { isValid, missingKeys };
+}
+
 // Function to get the local IP address
 function getLocalIpAddress() {
   const interfaces = os.networkInterfaces();
@@ -48,6 +62,7 @@ function sortByMachineName(list, desiredMachineName) {
 
 module.exports = {
   checkBody,
+  checkBodyReturnMissing,
   getLocalIpAddress,
   sortByMachineName,
 };

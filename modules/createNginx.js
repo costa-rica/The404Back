@@ -4,12 +4,27 @@ const path = require("path");
 function createServerFile(createObj) {
   const templateFilename = `${createObj.framework}${createObj.nginxDir}.txt`;
   console.log(`templateFilename: ${templateFilename}`);
-
-  const serverNameList = createObj.serverNames
-    .split(",")
-    .map((name) => name.trim());
-  const primaryServerName = serverNameList[0]; // Use the first server name for the file name
-  const serverNamesString = serverNameList.join(" "); // Join all server names with spaces
+  console.log(`createObj.serverNames: ${createObj.serverNames}`);
+  console.log(
+    `createObj.serverNames.includes(","): ${createObj.serverNames.includes(
+      ","
+    )}`
+  );
+  let serverNameList, primaryServerName, serverNamesString;
+  if (createObj.serverNames.includes(",")) {
+    console.log("FOUND  a Comma");
+    serverNameList = createObj.serverNames
+      .split(",")
+      .map((name) => name.trim());
+    primaryServerName = serverNameList[0]; // Use the first server name for the file name
+    serverNamesString = serverNameList.join(" "); // Join all server names with spaces
+  } else {
+    console.log("did NOT find  a comma");
+    serverNameList =
+      primaryServerName =
+      serverNamesString =
+        createObj.serverNames;
+  }
 
   // const proj_resources_path = path.join(
   const projectResourcesPath = path.join(
@@ -79,7 +94,12 @@ function createServerFile(createObj) {
     };
   }
 
-  return { result: true, templateFilename, outputFilePath };
+  return {
+    result: true,
+    templateFilename,
+    outputFilePath,
+    message: `Your ${createObj.nginxDir} file is stored at ${outputFilePath}`,
+  };
 }
 
 module.exports = { createServerFile };
