@@ -13,17 +13,15 @@ router.post("/server-file", authenticateToken, (req, res) => {
     "port",
   ]);
   if (!checkBodyObj.isValid) {
-    return res
-      .status(401)
-      .json({
-        result: false,
-        error: `Missing or empty fields: ${checkBodyObj.missingKeys}`,
-      });
+    return res.status(401).json({
+      result: false,
+      error: `Missing or empty fields: ${checkBodyObj.missingKeys}`,
+    });
   }
   const createFileObj = createServerFile(req.body);
 
   if (!createFileObj.result) {
-    return res.status(500).json(createFileObj);
+    return res.status(401).json(createFileObj);
   }
   return res.json(createFileObj);
 });
