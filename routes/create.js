@@ -6,7 +6,7 @@ const { authenticateToken } = require("../modules/userAuthentication");
 
 router.post("/server-file", authenticateToken, (req, res) => {
   console.log("in POST /create-server-file");
-  if (!checkBody(req.body, ["framework", "serverNames", "port"])) {
+  if (!checkBody(req.body, ["framework", "nginxDir", "serverNames", "port"])) {
     return res
       .status(401)
       .json({ result: false, error: "Missing or empty fields" });
