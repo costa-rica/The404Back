@@ -53,7 +53,7 @@ async function createNginxSitesAvailableFilesList(directoryPath) {
       const stat = await fs.stat(fullPath);
 
       if (stat.isFile()) {
-        console.log("-- isFile()");
+        // console.log("-- isFile()");
         const { urls, localIpOfApp, port } =
           await extractNginxSitesAvailableFileDetails(fullPath);
         fileList.push({

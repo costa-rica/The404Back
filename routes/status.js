@@ -31,6 +31,18 @@ router.get("/pm2", authenticateToken, async (req, res) => {
   return res.json({ result: true, appList });
 });
 
+router.get("/combined-update", authenticateToken, async (req, res) => {
+  const fileListConfd = await appendNginxConfdCollection();
+  const fileListSitesAvailable = await appendNginxSitesAvailableCollection();
+  const appList = await appendPm2Collection();
+  return res.json({
+    result: true,
+    fileListConfd,
+    fileListSitesAvailable,
+    appList,
+  });
+});
+
 router.get("/list/:outer", authenticateToken, async (req, res) => {
   console.log("in GET /list/:outer");
 
