@@ -1,14 +1,17 @@
 var express = require("express");
 var router = express.Router();
 const { checkBody } = require("../modules/common");
-const { createConfdFile } = require("../modules/createNginx");
+const { createServerFile } = require("../modules/createNginx");
+const { authenticateToken } = require("../modules/userAuthentication");
 
-router.post("/server-file", (req, res) => {
+router.post("/server-file", authenticateToken, (req, res) => {
   console.log("in POST /create-server-file");
-
-  const { nginxDir, framework, port, serverNames } = req.body;
-
-  const createFileObj = createConfdFile(req.body);
+  if (!checkBody(req.body, ["framework", "serverNames", "port"])) {
+    return res
+      .status(401)
+      .json({ result: false, error: "Missing or empty fields" });
+  }
+  const createFileObj = createServerFile(req.body);
 
   if (!createFileObj.result) {
     return res.status(500).json(createFileObj);

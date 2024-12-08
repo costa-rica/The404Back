@@ -1,35 +1,30 @@
 const fs = require("fs");
 const path = require("path");
 
-function createConfdFile(createObj) {
-  const { framework, nginxDir, port, serverNames } = createObj;
+function createServerFile(createObj) {
+  const templateFilename = `${createObj.framework}${createObj.nginxDir}.txt`;
+  console.log(`templateFilename: ${templateFilename}`);
 
-  let appCwd; // appCwd is the app current working dir (i.e. usually /home/user/app/appName)
-  if (framework !== "expressJs") {
-    appCwd = createObj.appCwd;
-  }
-
-  const serverNameList = serverNames.split(",").map((name) => name.trim());
+  const serverNameList = createObj.serverNames
+    .split(",")
+    .map((name) => name.trim());
   const primaryServerName = serverNameList[0]; // Use the first server name for the file name
   const serverNamesString = serverNameList.join(" "); // Join all server names with spaces
 
-  console.log(`nginxDir: ${nginxDir}, framework: ${framework}`);
-  const templateFilename = `${framework}${nginxDir}.txt`;
-  console.log(`templateFilename: ${templateFilename}`);
-
-  const proj_resources_path = path.join(
+  // const proj_resources_path = path.join(
+  const projectResourcesPath = path.join(
     process.env.PROJECT_RESOURCES,
     "createTemplateFiles"
   );
 
   // Check if the directory exists
-  if (!fs.existsSync(proj_resources_path)) {
+  if (!fs.existsSync(projectResourcesPath)) {
     return {
       result: false,
       message: "Missing project_resources/createTemplateFiles directory",
     };
   }
-  const filePath = path.join(proj_resources_path, templateFilename);
+  const filePath = path.join(projectResourcesPath, templateFilename);
   let templateFileContents;
   let newFileContent;
   let createNginxFilesDir = path.join(
@@ -43,25 +38,32 @@ function createConfdFile(createObj) {
     console.log(`Directory created: ${createNginxFilesDir}`);
   }
 
-  const outputFilePath = path.join(
-    createNginxFilesDir,
-    `${primaryServerName}.conf`
-  );
+  let outputFilePath = path.join(createNginxFilesDir, `${primaryServerName}`);
 
   try {
     // Read the file contents synchronously
     templateFileContents = fs.readFileSync(filePath, "utf8");
 
-    if (framework === "expressJs") {
+    if (templateFilename === "expressJsConfd.txt") {
+      outputFilePath = outputFilePath + ".conf";
       // replace the strings with
       newFileContent = templateFileContents
         .replace("<ReplaceMe: server name>", serverNamesString) // only once
-        .replace("<ReplaceMe: port number>", port); // only once
+        .replace("<ReplaceMe: port number>", createObj.port); // only once
+    } else if (
+      templateFilename === "nextJsConfd.txt" ||
+      templateFilename === "pythonFlaskConfd.txt"
+    ) {
+      outputFilePath = outputFilePath + ".conf";
+      newFileContent = templateFileContents
+        .replace("<ReplaceMe: server name>", serverNamesString) // only once
+        .replace(/<ReplaceMe: app cwd>/g, createObj.appCwd) // every instance
+        .replace("<ReplaceMe: port number>", createObj.port); // only once
     } else {
       newFileContent = templateFileContents
         .replace("<ReplaceMe: server name>", serverNamesString) // only once
-        .replace(/<ReplaceMe: app cwd>/g, appCwd) // every instance
-        .replace("<ReplaceMe: port number>", port); // only once
+        .replace(/<ReplaceMe: local ip>/g, createObj.localIp) // every instance
+        .replace(/<ReplaceMe: port number>/g, createObj.port); // every instance
     }
 
     // Write the new configuration to a file synchronously
@@ -77,7 +79,7 @@ function createConfdFile(createObj) {
     };
   }
 
-  return { templateFilename, result: true };
+  return { result: true, templateFilename, outputFilePath };
 }
 
-module.exports = { createConfdFile };
+module.exports = { createServerFile };
