@@ -22,3 +22,8 @@ STORE_CREATED_NGINX_FILE_NGINX_DIR=/etc/nginx/conf.d
 ```env
 STORE_CREATED_NGINX_FILE_NGINX_DIR=/etc/nginx/sites-available
 ```
+
+## Storing nginx files in Nginx Dirs
+
+Most probably need to changed permissions. To do this from the terminal I've done:
+`sudo chown -R nick:nick /etc/nginx/conf.d/` or `sudo chown -R dashanddata_user:dashanddata_user /etc/nginx/conf.d/`
