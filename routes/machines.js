@@ -11,7 +11,18 @@ router.get("/", authenticateToken, async (req, res) => {
   console.log("in GET /machines");
 
   const existingMachines = await Machine.find();
-  return res.json({ result: true, existingMachines });
+  console.log(existingMachines);
+
+  // Update each machine's properties if necessary
+  const updatedMachines = existingMachines.map((machine) => {
+    return {
+      ...machine.toObject(), // Convert Mongoose document to plain object
+      userHomeDir: machine.userHomeDir || "userHomeDir - Env var not found",
+      nginxDir: machine.nginxDir || "nginxDir - Env var not found",
+    };
+  });
+
+  return res.json({ result: true, existingMachines: updatedMachines });
 });
 
 router.post("/", authenticateToken, async (req, res) => {
