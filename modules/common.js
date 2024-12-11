@@ -1,4 +1,5 @@
 const os = require("os");
+const Machine = require("../models/machine");
 
 function checkBody(body, keys) {
   let isValid = true;
@@ -60,9 +61,43 @@ function sortByMachineName(list, desiredMachineName) {
   });
 }
 
+async function updateMachine() {
+  console.log("in update Machine");
+  const machineName = os.hostname();
+  console.log(`my machine naem is: ${machineName}`);
+  const localIpAddress = getLocalIpAddress();
+  const existingMachien = await Machine.find({ machineName });
+  Machine.find({ machineName }).then((data) => {
+    console.log("found sometihng in Machine");
+    console.log(data);
+    console.log(data.machineName);
+  });
+  console.log("what machien is htis: ");
+  console.log(existingMachien[0].machineName);
+  const machineObj = {
+    machineName,
+    urlFor404Api: localIpAddress,
+    userHomeDir: process.env.STORE_CREATED_NGINX_FILE_HOME,
+    nginxDir: process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR,
+    dateLastModified: new Date(),
+  };
+  await Machine.updateOne(
+    { machineName, localIpAddress },
+    { $set: machineObj },
+    { upsert: true } // Create a new document if no match is found
+  );
+
+  // await Pm2ManagedApp.updateOne(
+  //   { port, localIpOfMachine, projectWorkingDirectory },
+  //   { $set: elem }, // Update fields
+  //   { upsert: true } // Create a new document if no match is found
+  // );
+}
+
 module.exports = {
   checkBody,
   checkBodyReturnMissing,
   getLocalIpAddress,
   sortByMachineName,
+  updateMachine,
 };

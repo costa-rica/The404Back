@@ -23,6 +23,25 @@ router.post("/", authenticateToken, async (req, res) => {
       .json({ result: false, error: "Missing or empty fields" });
   }
   let newMachineUrl = req.body.urlFor404Api;
+  const areWeOnMacMiniWorkstation = os.hostname();
+  if (areWeOnMacMiniWorkstation === "Nicks-Mac-mini.local") {
+    console.log(`---> triggered Nicks-Mac-mini.local`);
+    newMachineUrl = "http://localhost8000";
+    const newMachine = new Machine({
+      machineName: areWeOnMacMiniWorkstation,
+      urlFor404Api: newMachineUrl,
+      userHomeDir: process.env.STORE_CREATED_NGINX_FILE_HOME,
+      nginxDir: process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR,
+      dateLastModified: new Date(),
+    });
+    await newMachine.save();
+
+    return res.json({
+      result: true,
+      url: newMachineUrl,
+      machineName: areWeOnMacMiniWorkstation,
+    });
+  }
 
   // Ensure the string starts with "https://"
   if (!newMachineUrl.startsWith("https://")) {
@@ -64,6 +83,8 @@ router.post("/", authenticateToken, async (req, res) => {
     const newMachine = new Machine({
       machineName,
       urlFor404Api: newMachineUrl,
+      userHomeDir: process.env.STORE_CREATED_NGINX_FILE_HOME,
+      nginxDir: process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR,
       dateLastModified: new Date(),
     });
     await newMachine.save();

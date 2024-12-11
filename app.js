@@ -14,6 +14,8 @@ var createRouter = require("./routes/create");
 
 var app = express();
 const cors = require("cors");
+const { updateMachine } = require("./modules/common");
+updateMachine();
 app.use(cors());
 
 app.use(logger("dev"));
