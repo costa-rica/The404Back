@@ -17,3 +17,8 @@ STORE_CREATED_NGINX_FILE_NGINX_DIR=/etc/nginx/conf.d
 ```
 
 - replacing `NGINX_FILES_CREATED` with `STORE_CREATED_NGINX_FILE_HOME`
+- for reverse proxy server servers use:
+
+```env
+STORE_CREATED_NGINX_FILE_NGINX_DIR=/etc/nginx/sites-available
+```

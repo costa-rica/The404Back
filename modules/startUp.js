@@ -5,15 +5,7 @@ const { getLocalIpAddress } = require("./common");
 async function updateMachine() {
   console.log("in update Machine");
   const machineName = os.hostname();
-  console.log(`my machine naem is: ${machineName}`);
   const localIpAddress = getLocalIpAddress();
-  const existingMachien = await Machine.find({ machineName });
-  Machine.find({ machineName }).then((data) => {
-    console.log("found sometihng in Machine");
-    console.log(data);
-  });
-  console.log("what machien is htis: ");
-  console.log(existingMachien[0].machineName);
   const machineObj = {
     machineName,
     localIpAddress: localIpAddress,
@@ -26,12 +18,6 @@ async function updateMachine() {
     { $set: machineObj },
     { upsert: true } // Create a new document if no match is found
   );
-
-  // await Pm2ManagedApp.updateOne(
-  //   { port, localIpOfMachine, projectWorkingDirectory },
-  //   { $set: elem }, // Update fields
-  //   { upsert: true } // Create a new document if no match is found
-  // );
 }
 
 module.exports = {
