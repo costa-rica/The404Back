@@ -44,7 +44,9 @@ function createServerFile(createObj) {
   const filePath = path.join(projectResourcesPath, templateFilename);
   let templateFileContents;
   let newFileContent;
-  let createNginxFilesDir = path.join(process.env.NGINX_FILES_CREATED);
+  const storeNginxFilePath =
+    createObj.storeNginxFilePath || process.env.STORE_CREATED_NGINX_FILE_HOME;
+  let createNginxFilesDir = path.join(storeNginxFilePath);
 
   // Check if the createNginxFilesDir directory exists
   if (!fs.existsSync(createNginxFilesDir)) {

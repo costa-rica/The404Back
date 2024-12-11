@@ -16,6 +16,13 @@ router.get("/machineName", async (req, res) => {
     process.env.NGINX_CONF_D_PATH
   );
 
+  console.log(
+    `STORE_CREATED_NGINX_FILE_HOME: ${process.env.STORE_CREATED_NGINX_FILE_HOME}`
+  );
+  console.log(
+    `STORE_CREATED_NGINX_FILE_NGINX_DIR: ${process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR}`
+  );
+
   // Find the element where filename contains ".the404."
   const targetElement = confdFileList.find((item) =>
     item.filename.includes(".the404api.")
@@ -32,6 +39,12 @@ router.get("/machineName", async (req, res) => {
   const response = {
     machineName: machineName,
     urlFor404Api: urlFor404Api,
+    userHomeDir:
+      process.env.STORE_CREATED_NGINX_FILE_HOME ||
+      "STORE_CREATED_NGINX_FILE_HOME Env var not found",
+    nginxDir:
+      process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR ||
+      "STORE_CREATED_NGINX_FILE_NGINX_DIR Env var not found",
   };
   console.log("response: ", response);
   console.log(response.machineName);

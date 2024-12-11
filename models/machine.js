@@ -4,6 +4,8 @@ const machineSchema = mongoose.Schema({
   machineName: String,
   urlFor404Api: String,
   localIpAddress: String,
+  userHomeDir: String,
+  nginxDir: String,
   dateLastModified: Date,
   dateCreated: { type: Date, default: Date.now },
 });
