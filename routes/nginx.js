@@ -16,7 +16,7 @@ router.get("/combined", authenticateToken, async (req, res) => {
     process.env.NGINX_SITES_AVAILABLE_PATH
   );
 
-  return res.json({ result: true, confd, sitesAvailable });
+  return res.json({ confd, sitesAvailable });
 });
 
 // Route to read and return the syslog file
