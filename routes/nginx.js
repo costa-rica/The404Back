@@ -9,8 +9,17 @@ const {
 const { authenticateToken } = require("../modules/userAuthentication");
 const { checkBodyReturnMissing } = require("../modules/common");
 
+router.get("/combined", authenticateToken, async (req, res) => {
+  console.log("- in GET /nginx/combined");
+  const confd = await createNginxConfdFilesList(process.env.NGINX_CONF_D_PATH);
+  const sitesAvailable = await createNginxSitesAvailableFilesList(
+    process.env.NGINX_SITES_AVAILABLE_PATH
+  );
+
+  return res.json({ result: true, confd, sitesAvailable });
+});
+
 // Route to read and return the syslog file
-// router.get("/combined", authenticateToken, async (req, res) => {
 router.get("/confd", authenticateToken, async (req, res) => {
   console.log("- in GET /nginx");
   const files = await createNginxConfdFilesList(process.env.NGINX_CONF_D_PATH);
