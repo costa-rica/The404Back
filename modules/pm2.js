@@ -63,14 +63,27 @@ async function appendPm2Collection() {
     localIpOfMachine: localIpAddress,
   });
 
+  // // Step 3: Collect all app names from appList for quick lookup
+  // const appNamesSet = new Set(appList.map((app) => app.nameOfApp));
+
+  // // Step 4: Delete Pm2ManagedApp documents that are not in appList
+  // const deletionPromises = filteredLocalPm2ManagedApp
+  //   .filter((doc) => !appNamesSet.has(doc.nameOfApp)) // Filter out apps not in appList
+  //   .map((doc) => {
+  //     console.log(`Deleting: ${doc.nameOfApp}`);
+  //     return Pm2ManagedApp.deleteOne({ _id: doc._id }); // Delete by _id for safety
+  //   });
+
+  // await Promise.all(deletionPromises);
+
   // Step 3: Collect all app names from appList for quick lookup
-  const appNamesSet = new Set(appList.map((app) => app.nameOfApp));
+  const appSet = new Set(appList.map((app) => `${app.nameOfApp}:${app.port}`));
 
   // Step 4: Delete Pm2ManagedApp documents that are not in appList
   const deletionPromises = filteredLocalPm2ManagedApp
-    .filter((doc) => !appNamesSet.has(doc.nameOfApp)) // Filter out apps not in appList
+    .filter((doc) => !appSet.has(`${doc.nameOfApp}:${doc.port}`)) // Match by both nameOfApp and port
     .map((doc) => {
-      console.log(`Deleting: ${doc.nameOfApp}`);
+      console.log(`Deleting: ${doc.nameOfApp} on port ${doc.port}`);
       return Pm2ManagedApp.deleteOne({ _id: doc._id }); // Delete by _id for safety
     });
 
