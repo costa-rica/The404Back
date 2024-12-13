@@ -11,6 +11,7 @@ var statusRouter = require("./routes/status");
 var machineRouter = require("./routes/machines");
 var logsRouter = require("./routes/logs");
 var createRouter = require("./routes/create");
+var nginxRouter = require("./routes/nginx");
 
 var app = express();
 const cors = require("cors");
@@ -29,6 +30,7 @@ app.use("/status", statusRouter);
 app.use("/machines", machineRouter);
 app.use("/logs", logsRouter);
 app.use("/create", createRouter);
+app.use("/nginx", nginxRouter);
 
 // Start up
 const { updateMachine } = require("./modules/startUp");
