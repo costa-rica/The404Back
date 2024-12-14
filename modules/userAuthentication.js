@@ -32,8 +32,25 @@ async function findUserByEmail(email) {
   }
 }
 
+// for ACCEPTED_EMAILS in .env just add "," to each new email (i.e. do not use [])
+const restrictEmails = (email) => {
+  const acceptedEmailsEnv = process.env.ACCEPTED_EMAILS;
+
+  // If ACCEPTED_EMAILS is not defined or empty, return false
+  if (!acceptedEmailsEnv) {
+    return true;
+  }
+
+  // Convert the comma-separated string into an array of emails
+  const acceptedEmails = acceptedEmailsEnv.split(",");
+
+  // Check if the provided email exists in the list of accepted emails
+  return acceptedEmails.includes(email);
+};
+
 module.exports = {
   createToken,
   authenticateToken,
   findUserByEmail,
+  restrictEmails,
 };

@@ -20,15 +20,9 @@ router.post("/register", async (req, res) => {
 
   const isAcceptedEmail = acceptedEmails.includes(req.body.email);
 
-  if (process.env.NODE_ENV == "production") {
-    if (!isAcceptedEmail) {
-      console.log(" 🚨 Did not register user");
-      return res.status(401).json({ message: "This email is not accepted" });
-    } else {
-      console.log("--> mail is accepted");
-    }
-  } else {
-    console.log("--> process.env.NODE_ENV is NOT equal to production");
+  if (!restrictEmails(req.body.email)) {
+    console.log("🚨 email not accepted");
+    return res.status(401).json({ message: "This email is not accepted" });
   }
 
   const email = req.body.email;
