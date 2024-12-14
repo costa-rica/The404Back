@@ -4,7 +4,6 @@ const User = require("../models/user");
 function createToken(user) {
   const payload = { userId: user.id };
   const secretKey = process.env.SECRET_KEY;
-  console.log("secret eky: ", process.env.SECRET_KEY);
   return jwt.sign(payload, secretKey, { expiresIn: "7d" });
 }
 
