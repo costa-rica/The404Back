@@ -16,9 +16,6 @@ router.post("/register", async (req, res) => {
       .status(401)
       .json({ result: false, error: "Missing or empty fields" });
   }
-  const acceptedEmails = JSON.parse(process.env.ACCEPTED_EMAILS || "[]");
-
-  const isAcceptedEmail = acceptedEmails.includes(req.body.email);
 
   if (!restrictEmails(req.body.email)) {
     console.log("🚨 email not accepted");
