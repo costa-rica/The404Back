@@ -5,6 +5,7 @@ const { checkBody } = require("../modules/common");
 const {
   createToken,
   findUserByEmail,
+  restrictEmails,
 } = require("../modules/userAuthentication");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
@@ -31,7 +32,7 @@ router.post("/register", async (req, res) => {
       .json({ result: false, message: "User exists already" });
   }
   const user = await User.create({ email, password: passwordHashed });
-  const token = createToken(user);
+  const token = createToken({ user });
   return res.json({ result: true, token });
 });
 
@@ -47,6 +48,9 @@ router.post("/login", async (req, res) => {
 
   try {
     const user = await findUserByEmail(email);
+
+    console.log(user);
+    console.log(typeof user);
     // check password
     if (!bcrypt.compareSync(req.body.password, user.password)) {
       console.log("wrong password");
@@ -55,7 +59,7 @@ router.post("/login", async (req, res) => {
         .json({ result: false, message: "Mot de passe erroné" });
     }
 
-    const token = createToken({ user_id: user.id });
+    const token = createToken({ user });
 
     console.log("token: ", token);
     return res.json({ result: true, message: "found user", token });

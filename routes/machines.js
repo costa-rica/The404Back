@@ -4,7 +4,10 @@ const os = require("os");
 const Machine = require("../models/machine");
 const { checkBody } = require("../modules/common");
 
-const { authenticateToken } = require("../modules/userAuthentication");
+const {
+  authenticateToken,
+  checkPermission,
+} = require("../modules/userAuthentication");
 
 /* GET home page. */
 router.get("/", authenticateToken, async (req, res) => {
@@ -25,7 +28,7 @@ router.get("/", authenticateToken, async (req, res) => {
   return res.json({ result: true, existingMachines: updatedMachines });
 });
 
-router.post("/", authenticateToken, async (req, res) => {
+router.post("/", authenticateToken, checkPermission, async (req, res) => {
   console.log("in POST /machines");
   console.log("checking ------");
   if (!checkBody(req.body, ["urlFor404Api"])) {
@@ -113,7 +116,7 @@ router.post("/", authenticateToken, async (req, res) => {
   return res.json({ result: true, url: newMachineUrl, machineName });
 });
 
-router.delete("/", authenticateToken, async (req, res) => {
+router.delete("/", authenticateToken, checkPermission, async (req, res) => {
   console.log("in DELETE /machines");
   const bodyFields = ["urlFor404Api", "machineName"];
   if (!checkBody(req.body, bodyFields)) {

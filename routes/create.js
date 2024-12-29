@@ -2,9 +2,12 @@ var express = require("express");
 var router = express.Router();
 const { checkBody, checkBodyReturnMissing } = require("../modules/common");
 const { createServerFile } = require("../modules/createNginx");
-const { authenticateToken } = require("../modules/userAuthentication");
+const {
+  authenticateToken,
+  checkPermission,
+} = require("../modules/userAuthentication");
 
-router.post("/server-file", authenticateToken, (req, res) => {
+router.post("/server-file", authenticateToken, checkPermission, (req, res) => {
   console.log("in POST /create-server-file");
   const checkBodyObj = checkBodyReturnMissing(req.body, [
     "framework",

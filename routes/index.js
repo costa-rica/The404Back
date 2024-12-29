@@ -47,8 +47,8 @@ router.get("/machineName", async (req, res) => {
       "STORE_CREATED_NGINX_FILE_NGINX_DIR Env var not found",
   };
   console.log("response: ", response);
-  console.log(response.machineName);
-  console.log(response.urlFor404Api);
+  console.log("/machineName response success!");
+  // return res.status(200).json(response);
   return res.json(response);
 });
 

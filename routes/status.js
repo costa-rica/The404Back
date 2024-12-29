@@ -5,7 +5,10 @@ const {
   appendNginxSitesAvailableCollection,
 } = require("../modules/nginxSitesAvailable");
 const { appendPm2Collection, togglePm2App } = require("../modules/pm2");
-const { authenticateToken } = require("../modules/userAuthentication");
+const {
+  authenticateToken,
+  checkPermission,
+} = require("../modules/userAuthentication");
 const os = require("os");
 const { sortByMachineName } = require("../modules/common");
 
@@ -45,6 +48,7 @@ router.get("/combined-update", authenticateToken, async (req, res) => {
 
 router.get("/list/:outer", authenticateToken, async (req, res) => {
   console.log("in GET /list/:outer");
+  // const user = req.user;
 
   let outerList = [];
   let innerCollection = Pm2ManagedApp;
@@ -79,32 +83,38 @@ router.get("/list/:outer", authenticateToken, async (req, res) => {
   return res.json({ appList });
 });
 
-router.post("/toggle-app", authenticateToken, async (req, res) => {
-  console.log(`- in POST /toggle-app`);
-  const { appName } = req.body;
-  console.log(`appName: ${appName}`);
+router.post(
+  "/toggle-app",
+  authenticateToken,
+  checkPermission,
+  async (req, res) => {
+    console.log(`- in POST /toggle-app`);
 
-  try {
-    const status = await togglePm2App(appName);
-    const machineName = os.hostname();
-    console.log("got status");
-    // Update the document
-    const result = await Pm2ManagedApp.findOneAndUpdate(
-      { nameOfApp: appName, machineName }, // Query filter
-      { $set: { status: status } }, // Update
-      { new: true } // Options: return the updated document
-    );
-    console.log("updated app document: ");
-    console.log(result);
+    const { appName } = req.body;
+    console.log(`appName: ${appName}`);
 
-    res
-      .status(200)
-      .json({ status, message: `App "${appName}" is now ${status}` });
-  } catch (error) {
-    console.error("Route error:", error.message);
-    res.status(500).json({ status: "error", message: error.message });
+    try {
+      const status = await togglePm2App(appName);
+      const machineName = os.hostname();
+      console.log("got status");
+      // Update the document
+      const result = await Pm2ManagedApp.findOneAndUpdate(
+        { nameOfApp: appName, machineName }, // Query filter
+        { $set: { status: status } }, // Update
+        { new: true } // Options: return the updated document
+      );
+      console.log("updated app document: ");
+      console.log(result);
+
+      res
+        .status(200)
+        .json({ status, message: `App "${appName}" is now ${status}` });
+    } catch (error) {
+      console.error("Route error:", error.message);
+      res.status(500).json({ status: "error", message: error.message });
+    }
   }
-});
+);
 
 // OBE - Delete
 router.get("/list-pm2-apps", authenticateToken, async (req, res) => {

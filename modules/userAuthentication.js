@@ -2,21 +2,41 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
 function createToken(user) {
-  const payload = { userId: user.id };
   const secretKey = process.env.SECRET_KEY;
-  return jwt.sign(payload, secretKey, { expiresIn: "7d" });
+  return jwt.sign({ user }, secretKey, { expiresIn: "7d" });
 }
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  if (token == null) return res.status(401).json({ message: "bad token" });
+  if (token == null) {
+    return res.status(401).json({ message: "Token is required" });
+  }
 
-  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
-    if (err) return res.status(403).json({ message: "invalid token" });
-    req.user = user;
+  jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+    if (err) return res.status(403).json({ message: "Invalid token" });
+    const { user } = decoded;
+    console.log("in authThoken func()");
+    console.log("user: ");
+    console.log(user);
+
+    req.user = user.user; // Set the decoded payload directly to req.user
     next();
   });
+}
+
+function checkPermission(req, res, next) {
+  console.log("---> in middleware: checkPermission");
+  const user = req.user;
+
+  console.log(user);
+  console.log("--- above is user in the middleware: checkPermission");
+  if (!user.toggleOnOffPermis) {
+    return res
+      .status(401)
+      .json({ message: "Invalid permission for this action" });
+  }
+  next();
 }
 
 async function findUserByEmail(email) {
@@ -50,6 +70,7 @@ const restrictEmails = (email) => {
 module.exports = {
   createToken,
   authenticateToken,
+  checkPermission,
   findUserByEmail,
   restrictEmails,
 };
