@@ -6,7 +6,10 @@ const { createNginxConfdFilesList } = require("../modules/nginxConfd");
 const {
   createNginxSitesAvailableFilesList,
 } = require("../modules/nginxSitesAvailable");
-const { authenticateToken } = require("../modules/userAuthentication");
+const {
+  authenticateToken,
+  checkPermission,
+} = require("../modules/userAuthentication");
 const { checkBodyReturnMissing } = require("../modules/common");
 
 router.get("/combined", authenticateToken, async (req, res) => {
