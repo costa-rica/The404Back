@@ -85,10 +85,15 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
     }
     // Parse the response as JSON
     responseData = await response.json();
+    console.log("--- responseData ---");
+    for (let item in responseData) {
+      console.log(`${item}: ${responseData[item]}`);
+    }
+    console.log("----- end of responseData ------");
     machineName = responseData.machineName;
     localIpAddress = responseData.localIpAddress;
-    console.log("First Machine name: ");
-    console.log(machineName);
+    console.log(`machineName: ${machineName}`);
+    console.log(`localIpAddress: ${localIpAddress}`);
   } catch (error) {
     // Handle fetch or other errors
     console.log("failed to get machien name response");
