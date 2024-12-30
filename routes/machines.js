@@ -32,7 +32,7 @@ router.get("/", authenticateToken, async (req, res) => {
 
 router.post("/", authenticateToken, checkPermission, async (req, res) => {
   console.log("in POST /machines");
-  console.log("checking ------");
+  console.log("1 ---> checkign for correct body requiremnts");
   if (!checkBody(req.body, ["urlFor404Api"])) {
     return res
       .status(401)
@@ -70,11 +70,13 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
     newMachineUrl = newMachineUrl.slice(0, -1);
   }
 
+  console.log("2 ---> pinging machine the404api url to verify");
   let machineName;
   let localIpAddress;
+
   try {
     const response = await fetch(`${newMachineUrl}/machineName`);
-    console.log("checkign respones for machienName");
+    console.log("3 ---> received response");
     console.log(response.status);
     if (response.status !== 200) {
       return res
@@ -96,7 +98,7 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
 
   // Use the macineName and local IP address to search the
 
-  const newOrUpdateMachine = Machine.findOneAndUpdate(
+  const newOrUpdateMachine = await Machine.findOneAndUpdate(
     { machineName, localIpAddress },
     {
       urlFor404Api: responseData.urlFor404Api,
@@ -109,7 +111,15 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
       upsert: true, // Create the document if it doesn't exist
     }
   );
+  console.log("4 ---> created new machine document / or updated an existing ");
 
+  console.log(
+    `---> we have a new machine: ${machineName} localIpAddress:${localIpAddress} `
+  );
+  for (prop in newOrUpdateMachine) {
+    console.log(`${prop}: ${newOrUpdateMachine[prop]}`);
+  }
+  console.log(`--- end of new props----`);
   // // ---- OLD -----
 
   // const existingMachine = await Machine.find({ urlFor404Api: newMachineUrl });
@@ -144,7 +154,8 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
   //   });
   // }
 
-  return res.json({ result: true, url: newMachineUrl, machineName });
+  // return res.json({ result: true, url: newMachineUrl, machineName });
+  return res.json({ result: true, newOrUpdateMachine });
 });
 
 router.delete("/", authenticateToken, checkPermission, async (req, res) => {
