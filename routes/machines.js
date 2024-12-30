@@ -73,7 +73,7 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
   console.log("2 ---> pinging machine the404api url to verify");
   let machineName;
   let localIpAddress;
-
+  let responseData;
   try {
     const response = await fetch(`${newMachineUrl}/machineName`);
     console.log("3 ---> received response");
@@ -84,7 +84,7 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
         .json({ result: false, error: "Machine doesn't exist" });
     }
     // Parse the response as JSON
-    const responseData = await response.json();
+    responseData = await response.json();
     machineName = responseData.machineName;
     console.log("First Machine name: ");
     console.log(machineName);
