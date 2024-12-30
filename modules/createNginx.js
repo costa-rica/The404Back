@@ -104,4 +104,25 @@ function createServerFile(createObj) {
   };
 }
 
-module.exports = { createServerFile };
+function getNginxStoragePaths() {
+  // Retrieve environmental variables
+  const storeHome = process.env.STORE_CREATED_NGINX_FILE_HOME;
+  const envVars = {
+    NGINX_CONF_D_PATH: process.env.NGINX_CONF_D_PATH,
+    NGINX_SITES_AVAILABLE_PATH: process.env.NGINX_SITES_AVAILABLE_PATH,
+  };
+
+  // Filter out invalid or missing paths
+  const validPaths = Object.values(envVars).filter((elem) => {
+    return typeof elem === "string" && elem.trim().length > 0;
+  });
+
+  // Always add STORE_CREATED_NGINX_FILE_HOME as the first element if valid
+  if (typeof storeHome === "string" && storeHome.trim().length > 0) {
+    validPaths.unshift(storeHome);
+  }
+
+  return validPaths;
+}
+
+module.exports = { createServerFile, getNginxStoragePaths };

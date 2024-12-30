@@ -4,6 +4,8 @@ const os = require("os");
 const { getLocalIpAddress } = require("../modules/common");
 const Machine = require("../models/machine");
 const { createNginxConfdFilesList } = require("../modules/nginxConfd");
+const { getNginxStoragePaths } = require("../modules/createNginx");
+
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
@@ -39,12 +41,13 @@ router.get("/machineName", async (req, res) => {
   const response = {
     machineName: machineName,
     urlFor404Api: urlFor404Api,
-    userHomeDir:
-      process.env.STORE_CREATED_NGINX_FILE_HOME ||
-      "STORE_CREATED_NGINX_FILE_HOME Env var not found",
-    nginxDir:
-      process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR ||
-      "STORE_CREATED_NGINX_FILE_NGINX_DIR Env var not found",
+    nginxStoragePathOptions: getNginxStoragePaths(),
+    // userHomeDir:
+    //   process.env.STORE_CREATED_NGINX_FILE_HOME ||
+    //   "STORE_CREATED_NGINX_FILE_HOME Env var not found",
+    // nginxDir:
+    //   process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR ||
+    //   "STORE_CREATED_NGINX_FILE_NGINX_DIR Env var not found",
   };
   console.log("response: ", response);
   console.log("/machineName response success!");
