@@ -20,11 +20,6 @@ router.get("/", authenticateToken, async (req, res) => {
   // Update each machine's properties if necessary
   const updatedMachines = existingMachines.map((machine) => {
     return machine;
-    // return {
-    //   ...machine.toObject(), // Convert Mongoose document to plain object
-    //   userHomeDir: machine.userHomeDir || "userHomeDir - Env var not found",
-    //   nginxDir: machine.nginxDir || "nginxDir - Env var not found",
-    // };
   });
 
   return res.json({ result: true, existingMachines: updatedMachines });
@@ -32,7 +27,6 @@ router.get("/", authenticateToken, async (req, res) => {
 
 router.post("/", authenticateToken, checkPermission, async (req, res) => {
   console.log("in POST /machines");
-  console.log("1 ---> checkign for correct body requiremnts");
   if (!checkBody(req.body, ["urlFor404Api"])) {
     return res
       .status(401)
@@ -70,14 +64,11 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
     newMachineUrl = newMachineUrl.slice(0, -1);
   }
 
-  console.log("2 ---> pinging machine the404api url to verify");
   let machineName;
   let localIpAddress;
   let responseData;
   try {
     const response = await fetch(`${newMachineUrl}/machineName`);
-    console.log("3 ---> received response");
-    console.log(response.status);
     if (response.status !== 200) {
       return res
         .status(401)
@@ -92,8 +83,6 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
     console.log("----- end of responseData ------");
     machineName = responseData.machineName;
     localIpAddress = responseData.localIpAddress;
-    console.log(`machineName: ${machineName}`);
-    console.log(`localIpAddress: ${localIpAddress}`);
   } catch (error) {
     // Handle fetch or other errors
     console.log("failed to get machien name response");
@@ -103,7 +92,6 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
   }
 
   // Use the macineName and local IP address to search the
-
   const newOrUpdateMachine = await Machine.findOneAndUpdate(
     { machineName, localIpAddress },
     {
@@ -117,50 +105,11 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
       upsert: true, // Create the document if it doesn't exist
     }
   );
-  console.log("4 ---> created new machine document / or updated an existing ");
 
   console.log(
     `---> we have a new machine: ${machineName} localIpAddress:${localIpAddress} `
   );
-  for (let prop in newOrUpdateMachine) {
-    console.log(`${prop}: ${newOrUpdateMachine[prop]}`);
-  }
-  console.log(`--- end of new props----`);
-  // // ---- OLD -----
 
-  // const existingMachine = await Machine.find({ urlFor404Api: newMachineUrl });
-  // console.log("----> did we get the machienName yet?? ");
-  // console.log(machineName);
-  // if (existingMachine.length === 0) {
-  //   const newMachine = new Machine({
-  //     machineName,
-  //     urlFor404Api: newMachineUrl,
-  //     userHomeDir: process.env.STORE_CREATED_NGINX_FILE_HOME,
-  //     // nginxDir: process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR,
-  //     nginxStoragePathOptions: getNginxStoragePaths(),
-  //     dateLastModified: new Date(),
-  //   });
-  //   await newMachine.save();
-  //   console.log("created a new machine entry");
-  // } else {
-  //   console.log("Machien already existssssss ---");
-
-  //   /// ------ MODIFY HERE ------
-  //   const updateMachine = await Machine.findOneAndUpdate(
-  //     { machineName }, // Query filter
-  //     { urlFor404Api: newMachineUrl }, // Update
-  //     { new: true } // Options: return the updated document
-  //   );
-
-  //   return res.json({
-  //     result: false,
-  //     message: "machine already exists",
-  //     url: newMachineUrl,
-  //     machineName,
-  //   });
-  // }
-
-  // return res.json({ result: true, url: newMachineUrl, machineName });
   return res.json({ result: true, newOrUpdateMachine });
 });
 
