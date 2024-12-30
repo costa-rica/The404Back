@@ -3,6 +3,7 @@ var router = express.Router();
 const os = require("os");
 const Machine = require("../models/machine");
 const { checkBody } = require("../modules/common");
+const { getNginxStoragePaths } = require("../modules/createNginx");
 
 const {
   authenticateToken,
@@ -18,11 +19,12 @@ router.get("/", authenticateToken, async (req, res) => {
 
   // Update each machine's properties if necessary
   const updatedMachines = existingMachines.map((machine) => {
-    return {
-      ...machine.toObject(), // Convert Mongoose document to plain object
-      userHomeDir: machine.userHomeDir || "userHomeDir - Env var not found",
-      nginxDir: machine.nginxDir || "nginxDir - Env var not found",
-    };
+    return machine;
+    // return {
+    //   ...machine.toObject(), // Convert Mongoose document to plain object
+    //   userHomeDir: machine.userHomeDir || "userHomeDir - Env var not found",
+    //   nginxDir: machine.nginxDir || "nginxDir - Env var not found",
+    // };
   });
 
   return res.json({ result: true, existingMachines: updatedMachines });
@@ -45,7 +47,8 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
       machineName: areWeOnMacMiniWorkstation,
       urlFor404Api: newMachineUrl,
       userHomeDir: process.env.STORE_CREATED_NGINX_FILE_HOME,
-      nginxDir: process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR,
+      // nginxDir: process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR,
+      nginxStoragePathOptions: getNginxStoragePaths(),
       dateLastModified: new Date(),
     });
     await newMachine.save();
@@ -98,7 +101,8 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
       machineName,
       urlFor404Api: newMachineUrl,
       userHomeDir: process.env.STORE_CREATED_NGINX_FILE_HOME,
-      nginxDir: process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR,
+      // nginxDir: process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR,
+      nginxStoragePathOptions: getNginxStoragePaths(),
       dateLastModified: new Date(),
     });
     await newMachine.save();

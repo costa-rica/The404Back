@@ -5,7 +5,8 @@ const machineSchema = mongoose.Schema({
   urlFor404Api: String,
   localIpAddress: String,
   userHomeDir: String,
-  nginxDir: String,
+  // nginxDir: String,
+  nginxStoragePathOptions: [String],
   dateLastModified: Date,
   dateCreated: { type: Date, default: Date.now },
 });
