@@ -108,7 +108,15 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
     await newMachine.save();
     console.log("created a new machine entry");
   } else {
-    console.log("MAchien already existssssss ---");
+    console.log("Machien already existssssss ---");
+
+    /// ------ MODIFY HERE ------
+    const updateMachine = await Machine.findOneAndUpdate(
+      { machineName }, // Query filter
+      { urlFor404Api: newMachineUrl }, // Update
+      { new: true } // Options: return the updated document
+    );
+
     return res.json({
       result: false,
       message: "machine already exists",
