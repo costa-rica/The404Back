@@ -16,9 +16,6 @@ NGINX_SITES_ENABLED_PATH=/etc/nginx/sites-enabled
 USER_HOME_DIR=/home/dashanddata_user
 ```
 
-- replacing `NGINX_FILES_CREATED` with `STORE_CREATED_NGINX_FILE_HOME`
-- for reverse proxy server servers use:
-
 ## Storing nginx files in Nginx Dirs
 
 Most probably need to changed permissions. To do this from the terminal I've done:
