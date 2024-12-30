@@ -39,17 +39,17 @@ function checkPermission(req, res, next) {
   next();
 }
 
-async function findUserByEmail(email) {
-  try {
-    const user = await User.findOne({ where: { email } });
-    if (!user) {
-      console.log("User not found");
-    }
-    return user;
-  } catch (error) {
-    console.error("Error finding user by email:", error);
-  }
-}
+// async function findUserByEmail(email) {
+//   try {
+//     const user = await User.findOne({ where: { email } });
+//     if (!user) {
+//       console.log("User not found");
+//     }
+//     return user;
+//   } catch (error) {
+//     console.error("Error finding user by email:", error);
+//   }
+// }
 
 // for ACCEPTED_EMAILS in .env just add "," to each new email (i.e. do not use [])
 const restrictEmails = (email) => {
@@ -71,6 +71,6 @@ module.exports = {
   createToken,
   authenticateToken,
   checkPermission,
-  findUserByEmail,
+  // findUserByEmail,
   restrictEmails,
 };

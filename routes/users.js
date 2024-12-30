@@ -4,7 +4,7 @@ const os = require("os");
 const { checkBody } = require("../modules/common");
 const {
   createToken,
-  findUserByEmail,
+  // findUserByEmail,
   restrictEmails,
 } = require("../modules/userAuthentication");
 const User = require("../models/user");
@@ -51,7 +51,8 @@ router.post("/login", async (req, res) => {
   const email = req.body.email;
 
   try {
-    const user = await findUserByEmail(email);
+    // const user = await findUserByEmail(email);
+    const user = await User.findOne({ email });
 
     console.log(user);
     console.log(typeof user);
