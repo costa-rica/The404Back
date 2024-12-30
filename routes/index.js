@@ -21,9 +21,6 @@ router.get("/machineName", async (req, res) => {
   console.log(
     `STORE_CREATED_NGINX_FILE_HOME: ${process.env.STORE_CREATED_NGINX_FILE_HOME}`
   );
-  console.log(
-    `STORE_CREATED_NGINX_FILE_NGINX_DIR: ${process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR}`
-  );
 
   // Find the element where filename contains ".the404."
   const targetElement = confdFileList.find((item) =>
@@ -44,16 +41,9 @@ router.get("/machineName", async (req, res) => {
     nginxStoragePathOptions: getNginxStoragePaths(),
     localIpAddress: getLocalIpAddress(),
     userHomeDir: process.env.USER_HOME_DIR,
-    // userHomeDir:
-    //   process.env.STORE_CREATED_NGINX_FILE_HOME ||
-    //   "STORE_CREATED_NGINX_FILE_HOME Env var not found",
-    // nginxDir:
-    //   process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR ||
-    //   "STORE_CREATED_NGINX_FILE_NGINX_DIR Env var not found",
   };
   console.log("response: ", response);
   console.log("/machineName response success!");
-  // return res.status(200).json(response);
   return res.json(response);
 });
 

@@ -41,7 +41,6 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
       machineName: areWeOnMacMiniWorkstation,
       urlFor404Api: newMachineUrl,
       userHomeDir: process.env.STORE_CREATED_NGINX_FILE_HOME,
-      // nginxDir: process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR,
       nginxStoragePathOptions: getNginxStoragePaths(),
       dateLastModified: new Date(),
     });

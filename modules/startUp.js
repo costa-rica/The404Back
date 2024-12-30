@@ -12,7 +12,6 @@ async function updateMachine() {
     localIpAddress: localIpAddress,
     userHomeDir: process.env.USER_HOME_DIR,
     nginxStoragePathOptions: getNginxStoragePaths(),
-    // nginxDir: process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR,
     dateLastModified: new Date(),
   };
   await Machine.updateOne(
