@@ -86,6 +86,7 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
     // Parse the response as JSON
     responseData = await response.json();
     machineName = responseData.machineName;
+    localIpAddress = responseData.localIpAddress;
     console.log("First Machine name: ");
     console.log(machineName);
   } catch (error) {
@@ -116,7 +117,7 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
   console.log(
     `---> we have a new machine: ${machineName} localIpAddress:${localIpAddress} `
   );
-  for (prop in newOrUpdateMachine) {
+  for (let prop in newOrUpdateMachine) {
     console.log(`${prop}: ${newOrUpdateMachine[prop]}`);
   }
   console.log(`--- end of new props----`);
