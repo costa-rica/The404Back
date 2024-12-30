@@ -42,6 +42,8 @@ router.get("/machineName", async (req, res) => {
     machineName: machineName,
     urlFor404Api: urlFor404Api,
     nginxStoragePathOptions: getNginxStoragePaths(),
+    localIpAddress: getLocalIpAddress(),
+    userHomeDir: process.env.USER_HOME_DIR,
     // userHomeDir:
     //   process.env.STORE_CREATED_NGINX_FILE_HOME ||
     //   "STORE_CREATED_NGINX_FILE_HOME Env var not found",

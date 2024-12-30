@@ -11,11 +11,12 @@ async function updateMachine() {
     machineName,
     localIpAddress: localIpAddress,
     userHomeDir: process.env.USER_HOME_DIR,
+    nginxStoragePathOptions: getNginxStoragePaths(),
     // nginxDir: process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR,
     dateLastModified: new Date(),
   };
   await Machine.updateOne(
-    { machineName },
+    { machineName, localIpAddress },
     { $set: machineObj },
     { upsert: true } // Create a new document if no match is found
   );

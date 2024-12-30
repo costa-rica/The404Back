@@ -71,6 +71,7 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
   }
 
   let machineName;
+  let localIpAddress;
   try {
     const response = await fetch(`${newMachineUrl}/machineName`);
     console.log("checkign respones for machienName");
@@ -93,37 +94,55 @@ router.post("/", authenticateToken, checkPermission, async (req, res) => {
       .json({ error: "Internal Server Error", details: error.message });
   }
 
-  const existingMachine = await Machine.find({ urlFor404Api: newMachineUrl });
-  console.log("----> did we get the machienName yet?? ");
-  console.log(machineName);
-  if (existingMachine.length === 0) {
-    const newMachine = new Machine({
-      machineName,
-      urlFor404Api: newMachineUrl,
-      userHomeDir: process.env.STORE_CREATED_NGINX_FILE_HOME,
-      // nginxDir: process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR,
-      nginxStoragePathOptions: getNginxStoragePaths(),
+  // Use the macineName and local IP address to search the
+
+  const newOrUpdateMachine = Machine.findOneAndUpdate(
+    { machineName, localIpAddress },
+    {
+      urlFor404Api: responseData.urlFor404Api,
+      nginxStoragePathOptions: responseData.nginxStoragePathOptions,
+      userHomeDir: responseData.userHomeDir,
       dateLastModified: new Date(),
-    });
-    await newMachine.save();
-    console.log("created a new machine entry");
-  } else {
-    console.log("Machien already existssssss ---");
+    },
+    {
+      new: true, // Return the updated document
+      upsert: true, // Create the document if it doesn't exist
+    }
+  );
 
-    /// ------ MODIFY HERE ------
-    const updateMachine = await Machine.findOneAndUpdate(
-      { machineName }, // Query filter
-      { urlFor404Api: newMachineUrl }, // Update
-      { new: true } // Options: return the updated document
-    );
+  // // ---- OLD -----
 
-    return res.json({
-      result: false,
-      message: "machine already exists",
-      url: newMachineUrl,
-      machineName,
-    });
-  }
+  // const existingMachine = await Machine.find({ urlFor404Api: newMachineUrl });
+  // console.log("----> did we get the machienName yet?? ");
+  // console.log(machineName);
+  // if (existingMachine.length === 0) {
+  //   const newMachine = new Machine({
+  //     machineName,
+  //     urlFor404Api: newMachineUrl,
+  //     userHomeDir: process.env.STORE_CREATED_NGINX_FILE_HOME,
+  //     // nginxDir: process.env.STORE_CREATED_NGINX_FILE_NGINX_DIR,
+  //     nginxStoragePathOptions: getNginxStoragePaths(),
+  //     dateLastModified: new Date(),
+  //   });
+  //   await newMachine.save();
+  //   console.log("created a new machine entry");
+  // } else {
+  //   console.log("Machien already existssssss ---");
+
+  //   /// ------ MODIFY HERE ------
+  //   const updateMachine = await Machine.findOneAndUpdate(
+  //     { machineName }, // Query filter
+  //     { urlFor404Api: newMachineUrl }, // Update
+  //     { new: true } // Options: return the updated document
+  //   );
+
+  //   return res.json({
+  //     result: false,
+  //     message: "machine already exists",
+  //     url: newMachineUrl,
+  //     machineName,
+  //   });
+  // }
 
   return res.json({ result: true, url: newMachineUrl, machineName });
 });
