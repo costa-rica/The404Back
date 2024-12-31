@@ -25,12 +25,12 @@ Most probably need to changed permissions. To do this from the terminal I've don
 
 ### POST /create/server-file
 
-- request body:
-  framework: selectedRadioFramework,
-  nginxDir: selectedRadioNginx,
-  serverNames: serverNamesStringCommaSeparated,
-  port: port,
-  storeNginxFilePath: selectedStoreNginxFilePathRadio,
-  Optional
-  appCwd: cwd
-  localIp: localIp
+- request body (required):
+  - framework: selectedRadioFramework,
+  - nginxDir: selectedRadioNginx,
+  - serverNames: serverNamesStringCommaSeparated,
+  - port: port,
+  - storeNginxFilePath: selectedStoreNginxFilePathRadio,
+  - request body (optional):
+    - appCwd: cwd
+    - localIp: localIp

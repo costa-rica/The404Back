@@ -18,10 +18,6 @@ router.get("/machineName", async (req, res) => {
     process.env.NGINX_CONF_D_PATH
   );
 
-  console.log(
-    `STORE_CREATED_NGINX_FILE_HOME: ${process.env.STORE_CREATED_NGINX_FILE_HOME}`
-  );
-
   // Find the element where filename contains ".the404."
   const targetElement = confdFileList.find((item) =>
     item.filename.includes(".the404api.")

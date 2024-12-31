@@ -47,7 +47,7 @@ function createServerFile(createObj) {
   let templateFileContents;
   let newFileContent;
   const storeNginxFilePath =
-    createObj.storeNginxFilePath || process.env.STORE_CREATED_NGINX_FILE_HOME;
+    createObj.storeNginxFilePath || process.env.USER_HOME_DIR;
   let createNginxFilesDir = path.join(storeNginxFilePath);
 
   // Check if the createNginxFilesDir directory exists
@@ -119,7 +119,7 @@ function getNginxStoragePaths() {
     return typeof elem === "string" && elem.trim().length > 0;
   });
 
-  // Always add STORE_CREATED_NGINX_FILE_HOME as the first element if valid
+  // Always add USER_HOME_DIR as the first element if valid
   if (typeof storeHome === "string" && storeHome.trim().length > 0) {
     validPaths.unshift(storeHome);
   }
