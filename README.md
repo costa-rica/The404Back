@@ -20,3 +20,17 @@ USER_HOME_DIR=/home/dashanddata_user
 
 Most probably need to changed permissions. To do this from the terminal I've done:
 `sudo chown -R nick:nick /etc/nginx/conf.d/` or `sudo chown -R dashanddata_user:dashanddata_user /etc/nginx/conf.d/`
+
+## Routes
+
+### POST /create/server-file
+
+- request body:
+  framework: selectedRadioFramework,
+  nginxDir: selectedRadioNginx,
+  serverNames: serverNamesStringCommaSeparated,
+  port: port,
+  storeNginxFilePath: selectedStoreNginxFilePathRadio,
+  Optional
+  appCwd: cwd
+  localIp: localIp

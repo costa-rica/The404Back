@@ -32,6 +32,8 @@ function createServerFile(createObj) {
     "createTemplateFiles"
   );
 
+  console.log(`--> projectResourcesPath: ${projectResourcesPath}`);
+
   // Check if the directory exists
   if (!fs.existsSync(projectResourcesPath)) {
     console.log("projectResourcesPath does NOT exists");
