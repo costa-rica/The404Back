@@ -24,6 +24,7 @@ router.post("/server-file", authenticateToken, checkPermission, (req, res) => {
   const createFileObj = createServerFile(req.body);
 
   if (!createFileObj.result) {
+    console.error("---> problem in the /modules/createNginx.js file");
     return res.status(401).json(createFileObj);
   }
   return res.json(createFileObj);
