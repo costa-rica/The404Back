@@ -108,7 +108,7 @@ function createServerFile(createObj) {
 
 function getNginxStoragePaths() {
   // Retrieve environmental variables
-  const storeHome = process.env.STORE_CREATED_NGINX_FILE_HOME;
+  const storeHome = process.env.USER_HOME_DIR;
   const envVars = {
     NGINX_CONF_D_PATH: process.env.NGINX_CONF_D_PATH,
     NGINX_SITES_AVAILABLE_PATH: process.env.NGINX_SITES_AVAILABLE_PATH,
