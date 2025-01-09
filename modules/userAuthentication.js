@@ -16,9 +16,9 @@ function authenticateToken(req, res, next) {
   jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
     if (err) return res.status(403).json({ message: "Invalid token" });
     const { user } = decoded;
-    console.log("in authThoken func()");
-    console.log("user: ");
-    console.log(user);
+    // console.log("in authThoken func()");
+    // console.log("user: ");
+    // console.log(user);
 
     req.user = user.user; // Set the decoded payload directly to req.user
     next();
